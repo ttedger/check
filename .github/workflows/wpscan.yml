@@ -1,0 +1,27 @@
+name: WPScan Security Scan
+
+on:
+  workflow_dispatch:  # Manual trigger from GitHub UI
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install WPScan
+        run: gem install wpscan
+
+      - name: Run WPScan
+        env:
+          WPSCAN_API_TOKEN: ${{ secrets.WPSCAN_API_TOKEN }}
+        run: |
+          wpscan --url https://dallolgebeya.com \
+                 --enumerate vp,vt,u \
+                 --api-token $WPSCAN_API_TOKEN \
+                 --format json \
+                 --output wpscan-results.json
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: wpscan-results
+          path: wpscan-results.json
