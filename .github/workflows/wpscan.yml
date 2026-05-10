@@ -1,7 +1,7 @@
 name: WPScan WordPress Security Scan
 
 on:
-  workflow_dispatch:  # Lets you run it manually from GitHub UI
+  workflow_dispatch:
 
 jobs:
   security-scan:
