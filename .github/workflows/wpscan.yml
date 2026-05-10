@@ -1,27 +1,15 @@
-name: WPScan WordPress Security Scan
+name: WPScan Diagnostic
 
 on:
   workflow_dispatch:
 
 jobs:
-  security-scan:
+  diagnostic:
     runs-on: ubuntu-latest
     steps:
       - name: Install WPScan
         run: sudo gem install wpscan
 
-      - name: Run WPScan on dallolgebeya.com
-        env:
-          WPSCAN_API_TOKEN: ${{ secrets.WPSCAN_API_TOKEN }}
+      - name: Basic scan (no token, no enumeration)
         run: |
-          wpscan --url https://dallolgebeya.com \
-                 --enumerate vp,vt,u \
-                 --api-token $WPSCAN_API_TOKEN \
-                 --format json \
-                 --output wpscan-results.json
-
-      - name: Upload scan results
-        uses: actions/upload-artifact@v4
-        with:
-          name: wpscan-results
-          path: wpscan-results.json
+          wpscan --url https://dallolgebeya.com --no-update
